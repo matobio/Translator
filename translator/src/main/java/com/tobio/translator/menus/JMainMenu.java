@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
@@ -240,6 +242,47 @@ public class JMainMenu extends JFrame {
 
 
     protected void addValueChangeListeners() {
+
+        this.fieldSpanish.addKeyListener(new FieldKeyListener(this.fieldSpanish));
+        this.fieldEnglish.addKeyListener(new FieldKeyListener(this.fieldEnglish));
+    }
+
+    class FieldKeyListener implements KeyListener {
+
+        protected JTextArea jTextArea = null;
+
+
+        public FieldKeyListener(JTextArea jTextArea) {
+            this.jTextArea = jTextArea;
+        }
+
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_TAB) {
+                if (e.getModifiers() > 0) {
+                    this.jTextArea.transferFocusBackward();
+                } else {
+                    this.jTextArea.transferFocus();
+                }
+                e.consume();
+            }
+
+        }
+
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            // TODO Auto-generated method stub
+
+        }
+
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            // TODO Auto-generated method stub
+
+        }
 
     }
 
