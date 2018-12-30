@@ -1,5 +1,6 @@
 package com.tobio.translator.menus;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -12,30 +13,35 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 import com.tobio.translator.utils.Constants;
+import com.tobio.translator.utils.GoogleTranslatorUtils;
 
 public class JMainMenu extends JFrame {
 
+    private static final long serialVersionUID = 1L;
+
     // Labels
-    protected JLabel     labelSpanish    = null;
-    protected JLabel     labelGallego    = null;
-    protected JLabel     labelEnglish    = null;
-    protected JLabel     labelPortuguese = null;
-    protected JLabel     labelChinese    = null;
-    protected JLabel     labelFrances    = null;
+    protected JLabel          labelSpanish     = null;
+    protected JLabel          labelGallego     = null;
+    protected JLabel          labelEnglish     = null;
+    protected JLabel          labelPortuguese  = null;
+    protected JLabel          labelChinese     = null;
+    protected JLabel          labelFrances     = null;
+    protected JLabel          labelGerman      = null;
 
     // Textfields
-    protected JTextField fieldSpanish    = null;
-    protected JTextField fieldGallego    = null;
-    protected JTextField fieldEnglish    = null;
-    protected JTextField fieldPortuguese = null;
-    protected JTextField fieldChinese    = null;
-    protected JTextField fieldFrances    = null;
+    protected JTextArea       fieldSpanish     = null;
+    protected JTextArea       fieldGallego     = null;
+    protected JTextArea       fieldEnglish     = null;
+    protected JTextArea       fieldPortuguese  = null;
+    protected JTextArea       fieldChinese     = null;
+    protected JTextArea       fieldFrances     = null;
+    protected JTextArea       fieldGerman      = null;
 
-    protected JButton    btnTranslate    = null;
-    protected JButton    btnClean        = null;
+    protected JButton         btnTranslate     = null;
+    protected JButton         btnClean         = null;
 
 
     public static JMainMenu newInstance(Map<String, Object> parameters) {
@@ -150,6 +156,14 @@ public class JMainMenu extends JFrame {
         constraints.gridy = 3;
         panel.add(this.fieldFrances, constraints);
 
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        panel.add(this.labelGerman, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        panel.add(this.fieldGerman, constraints);
+
         return panel;
     }
 
@@ -191,23 +205,33 @@ public class JMainMenu extends JFrame {
         this.labelPortuguese = new JLabel(Constants.PORTUGUES);
         this.labelChinese = new JLabel(Constants.CHINO);
         this.labelFrances = new JLabel(Constants.FRANCES);
+        this.labelGerman = new JLabel(Constants.GERMAN);
 
         // Textfields
         int columns = 100;
-        this.fieldSpanish = new JTextField(columns);
-        this.fieldEnglish = new JTextField(columns);
+        int rows = 2;
+        this.fieldSpanish = new JTextArea(rows, columns);
+        this.fieldEnglish = new JTextArea(rows, columns);
 
-        this.fieldGallego = new JTextField(columns);
+        this.fieldGallego = new JTextArea(rows, columns);
         this.fieldGallego.setEditable(false);
+        this.fieldGallego.setBackground(Color.LIGHT_GRAY);
 
-        this.fieldPortuguese = new JTextField(columns);
+        this.fieldPortuguese = new JTextArea(rows, columns);
         this.fieldPortuguese.setEditable(false);
+        this.fieldPortuguese.setBackground(Color.LIGHT_GRAY);
 
-        this.fieldChinese = new JTextField(columns);
+        this.fieldChinese = new JTextArea(rows, columns);
         this.fieldChinese.setEditable(false);
+        this.fieldChinese.setBackground(Color.LIGHT_GRAY);
 
-        this.fieldFrances = new JTextField(columns);
+        this.fieldFrances = new JTextArea(rows, columns);
         this.fieldFrances.setEditable(false);
+        this.fieldFrances.setBackground(Color.LIGHT_GRAY);
+
+        this.fieldGerman = new JTextArea(rows, columns);
+        this.fieldGerman.setEditable(false);
+        this.fieldGerman.setBackground(Color.LIGHT_GRAY);
 
         // Button translate
         this.btnTranslate = new JButton(Constants.TRANSLATE);
@@ -238,6 +262,7 @@ public class JMainMenu extends JFrame {
         }
 
 
+        @Override
         public void actionPerformed(ActionEvent ev) {
 
             try {
@@ -255,11 +280,13 @@ public class JMainMenu extends JFrame {
                 String portugueseTranslation = GoogleTranslatorUtils.translate("es", "pt", spanishText);
                 String franceTranslation = GoogleTranslatorUtils.translate("en", "fr", englishText);
                 String chineseTranslation = GoogleTranslatorUtils.translate("en", "zh", englishText);
+                String germanTranslation = GoogleTranslatorUtils.translate("en", "de", englishText);
 
                 JMainMenu.this.fieldGallego.setText(gallegoTranslation);
                 JMainMenu.this.fieldPortuguese.setText(portugueseTranslation);
                 JMainMenu.this.fieldFrances.setText(franceTranslation);
                 JMainMenu.this.fieldChinese.setText(chineseTranslation);
+                JMainMenu.this.fieldGerman.setText(germanTranslation);
 
             } catch (Exception e) {
 
@@ -275,6 +302,7 @@ public class JMainMenu extends JFrame {
         }
 
 
+        @Override
         public void actionPerformed(ActionEvent ev) {
 
             JMainMenu.this.fieldSpanish.setText(null);
@@ -283,7 +311,7 @@ public class JMainMenu extends JFrame {
             JMainMenu.this.fieldPortuguese.setText(null);
             JMainMenu.this.fieldFrances.setText(null);
             JMainMenu.this.fieldChinese.setText(null);
-
+            JMainMenu.this.fieldGerman.setText(null);
         }
     }
 
