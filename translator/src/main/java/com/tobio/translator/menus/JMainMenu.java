@@ -10,12 +10,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.border.TitledBorder;
 
 import com.tobio.translator.utils.Constants;
 import com.tobio.translator.utils.GoogleTranslatorUtils;
@@ -53,13 +56,19 @@ public class JMainMenu extends JFrame {
 
     protected JMainMenu(Map<String, Object> parameters) {
 
-        super("Traductor");
+        super("Traductor by Tobío");
 
-        this.init(parameters);
+        try {
 
-        this.addActionListeners();
+            this.init(parameters);
 
-        this.addValueChangeListeners();
+            this.addActionListeners();
+
+            this.addValueChangeListeners();
+
+        } catch (Exception ex) {
+        }
+
     }
 
 
@@ -71,7 +80,6 @@ public class JMainMenu extends JFrame {
 
         this.setSize(1000, 1000);
         this.pack();
-        this.setVisible(true);
 
     }
 
@@ -91,7 +99,10 @@ public class JMainMenu extends JFrame {
         mainPanel.add(panel2);
         mainPanel.add(panel3);
 
-        this.add(mainPanel);
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+
+        this.add(scrollPane);
+
     }
 
 
@@ -166,6 +177,13 @@ public class JMainMenu extends JFrame {
         constraints.gridy = 4;
         panel.add(this.fieldGerman, constraints);
 
+        TitledBorder border = new TitledBorder("Traducciones");
+        border.setTitleJustification(TitledBorder.LEFT);
+        border.setTitlePosition(TitledBorder.TOP);
+        border.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+        panel.setBorder(border);
+
         return panel;
     }
 
@@ -194,6 +212,12 @@ public class JMainMenu extends JFrame {
         constraints.gridy = 1;
         panel1.add(this.fieldEnglish, constraints);
 
+        TitledBorder border = new TitledBorder("Traducir ");
+        border.setTitleJustification(TitledBorder.LEFT);
+        border.setTitlePosition(TitledBorder.TOP);
+        border.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+        panel1.setBorder(border);
         return panel1;
     }
 

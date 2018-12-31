@@ -16,5 +16,6 @@ public class App {
 
         JFrame menu = JMainMenu.newInstance(new HashMap<String, Object>());
 
+        menu.setVisible(true);
     }
 }

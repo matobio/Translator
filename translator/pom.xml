@@ -7,13 +7,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>translator</name>
+	<name>Tobío Translator</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
 
-		<!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
-		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<!-- 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding> -->
 
 		<java.version>1.8</java.version>
 
@@ -101,9 +101,9 @@
 							<classPath>
 								<mainClass>com.tobio.translator.App</mainClass>
 							</classPath>
-							<!-- <icon>Project.ico</icon> -->
+							<icon>src/main/resources/images/icon1.ico</icon>
 							<jre>
-								<minVersion>1.5.0</minVersion>
+								<minVersion>1.8.0</minVersion>
 								<!-- <maxVersion>1.6.0</maxVersion> -->
 								<initialHeapSize>512</initialHeapSize>
 								<maxHeapSize>1024</maxHeapSize>
@@ -139,7 +139,16 @@
 			<artifactId>json</artifactId>
 			<version>20180813</version>
 		</dependency>
+		<dependency>
+			<groupId>com.seaglasslookandfeel</groupId>
+			<artifactId>seaglasslookandfeel</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.insubstantial</groupId>
+			<artifactId>substance</artifactId>
+			<version>7.2.1</version>
 
-
+		</dependency>
 	</dependencies>
 </project>
