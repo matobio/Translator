@@ -3,11 +3,14 @@ package com.tobio.translator.menus;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.net.URL;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -83,6 +86,16 @@ public class JMainMenu extends JFrame {
         this.setSize(1000, 1000);
         this.pack();
 
+        this.addIconImage();
+    }
+
+
+    protected void addIconImage() {
+
+        URL url = Thread.currentThread().getContextClassLoader().getResource("images/icon1.png");
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        Image img = kit.createImage(url);
+        this.setIconImage(img);
     }
 
 
