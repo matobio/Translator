@@ -9,6 +9,7 @@ public class Constants {
     public static final String CHINO     = "Chino";
     public static final String PORTUGUES = "Portugues";
     public static final String GERMAN    = "Aleman";
+    public static final String CATALAN   = "Catalan";
 
     public static final String TRANSLATE = "Traducir";
     public static final String CLEAN     = "Limpiar";

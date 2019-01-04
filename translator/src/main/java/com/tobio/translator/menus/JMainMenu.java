@@ -35,6 +35,7 @@ public class JMainMenu extends JFrame {
     protected JLabel          labelChinese     = null;
     protected JLabel          labelFrances     = null;
     protected JLabel          labelGerman      = null;
+    protected JLabel          labelCatalan     = null;
 
     // Textfields
     protected JTextArea       fieldSpanish     = null;
@@ -44,6 +45,7 @@ public class JMainMenu extends JFrame {
     protected JTextArea       fieldChinese     = null;
     protected JTextArea       fieldFrances     = null;
     protected JTextArea       fieldGerman      = null;
+    protected JTextArea       fieldCatalan     = null;
 
     protected JButton         btnTranslate     = null;
     protected JButton         btnClean         = null;
@@ -147,36 +149,45 @@ public class JMainMenu extends JFrame {
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        panel.add(this.labelPortuguese, constraints);
+        panel.add(this.labelCatalan, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 1;
+        panel.add(this.fieldCatalan, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        panel.add(this.labelPortuguese, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 2;
         panel.add(this.fieldPortuguese, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         panel.add(this.labelChinese, constraints);
 
         constraints.gridx = 1;
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         panel.add(this.fieldChinese, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 3;
+        constraints.gridy = 4;
         panel.add(this.labelFrances, constraints);
 
         constraints.gridx = 1;
-        constraints.gridy = 3;
+        constraints.gridy = 4;
         panel.add(this.fieldFrances, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 4;
+        constraints.gridy = 5;
         panel.add(this.labelGerman, constraints);
 
         constraints.gridx = 1;
-        constraints.gridy = 4;
+        constraints.gridy = 5;
         panel.add(this.fieldGerman, constraints);
 
+        // Add the border
         TitledBorder border = new TitledBorder("Traducciones");
         border.setTitleJustification(TitledBorder.LEFT);
         border.setTitlePosition(TitledBorder.TOP);
@@ -232,6 +243,7 @@ public class JMainMenu extends JFrame {
         this.labelChinese = new JLabel(Constants.CHINO);
         this.labelFrances = new JLabel(Constants.FRANCES);
         this.labelGerman = new JLabel(Constants.GERMAN);
+        this.labelCatalan = new JLabel(Constants.CATALAN);
 
         // Textfields
         int columns = 100;
@@ -242,6 +254,10 @@ public class JMainMenu extends JFrame {
         this.fieldGallego = new JTextArea(rows, columns);
         this.fieldGallego.setEditable(false);
         this.fieldGallego.setBackground(Color.LIGHT_GRAY);
+
+        this.fieldCatalan = new JTextArea(rows, columns);
+        this.fieldCatalan.setEditable(false);
+        this.fieldCatalan.setBackground(Color.LIGHT_GRAY);
 
         this.fieldPortuguese = new JTextArea(rows, columns);
         this.fieldPortuguese.setEditable(false);
@@ -344,12 +360,14 @@ public class JMainMenu extends JFrame {
                 }
 
                 String gallegoTranslation = GoogleTranslatorUtils.translate("es", "gl", spanishText);
+                String catalanTranslation = GoogleTranslatorUtils.translate("es", "ca", spanishText);
                 String portugueseTranslation = GoogleTranslatorUtils.translate("es", "pt", spanishText);
                 String franceTranslation = GoogleTranslatorUtils.translate("en", "fr", englishText);
                 String chineseTranslation = GoogleTranslatorUtils.translate("en", "zh", englishText);
                 String germanTranslation = GoogleTranslatorUtils.translate("en", "de", englishText);
 
                 JMainMenu.this.fieldGallego.setText(gallegoTranslation);
+                JMainMenu.this.fieldCatalan.setText(catalanTranslation);
                 JMainMenu.this.fieldPortuguese.setText(portugueseTranslation);
                 JMainMenu.this.fieldFrances.setText(franceTranslation);
                 JMainMenu.this.fieldChinese.setText(chineseTranslation);
@@ -379,6 +397,7 @@ public class JMainMenu extends JFrame {
             JMainMenu.this.fieldFrances.setText(null);
             JMainMenu.this.fieldChinese.setText(null);
             JMainMenu.this.fieldGerman.setText(null);
+            JMainMenu.this.fieldCatalan.setText(null);
         }
     }
 
