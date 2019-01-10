@@ -1,4 +1,4 @@
-package com.tobio.translator.utils;
+package com.tobio.translator.translators;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,15 +8,26 @@ import java.net.URLEncoder;
 
 import org.json.JSONArray;
 
-public class GoogleTranslatorUtils {
+import com.tobio.translator.interfaces.ICustomTranslator;
 
-    private GoogleTranslatorUtils() {
-        // Utility class
+public class GoogleTranslator implements ICustomTranslator {
+
+    protected static GoogleTranslator instance;
+
+
+    protected GoogleTranslator() {}
+
+
+    public static GoogleTranslator getInstance() {
+        if (GoogleTranslator.instance == null) {
+            GoogleTranslator.instance = new GoogleTranslator();
+        }
+        return GoogleTranslator.instance;
     }
 
 
-    public static String translate(String langFrom, String langTo, String textToTranslate) {
-
+    @Override
+    public String translate(String langFrom, String langTo, String textToTranslate) {
         StringBuilder sbTranslation = new StringBuilder();
 
         try {

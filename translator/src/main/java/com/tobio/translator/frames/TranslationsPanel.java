@@ -1,32 +1,29 @@
-package com.tobio.translator.menus;
+package com.tobio.translator.frames;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.net.URL;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
+import com.tobio.translator.interfaces.ICustomTranslator;
+import com.tobio.translator.translators.AbstractTranslator;
 import com.tobio.translator.utils.Constants;
-import com.tobio.translator.utils.GoogleTranslatorUtils;
 
-public class JMainMenu extends JFrame {
+public class TranslationsPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -54,52 +51,23 @@ public class JMainMenu extends JFrame {
     protected JButton         btnClean         = null;
 
 
-    public static JMainMenu newInstance(Map<String, Object> parameters) {
-        return new JMainMenu(parameters);
+    protected TranslationsPanel(LayoutManager layout, Map<String, Object> params) {
+        super(layout);
+
+        this.init(params);
+
+        this.addActionListeners();
+
+        this.addValueChangeListeners();
     }
 
 
-    protected JMainMenu(Map<String, Object> parameters) {
-
-        super("Traductor by Tobío");
-
-        try {
-
-            this.init(parameters);
-
-            this.addActionListeners();
-
-            this.addValueChangeListeners();
-
-        } catch (Exception ex) {
-        }
-
+    public static TranslationsPanel newInstance(LayoutManager layout, Map<String, Object> params) {
+        return new TranslationsPanel(layout, params);
     }
 
 
-    protected void init(Map<String, Object> parameters) {
-
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        this.addComponents();
-
-        this.setSize(1000, 1000);
-        this.pack();
-
-        this.addIconImage();
-    }
-
-
-    protected void addIconImage() {
-
-        URL url = Thread.currentThread().getContextClassLoader().getResource("images/icon1.png");
-        Toolkit kit = Toolkit.getDefaultToolkit();
-        Image img = kit.createImage(url);
-        this.setIconImage(img);
-    }
-
-
-    protected void addComponents() {
+    protected void init(Map<String, Object> params) {
 
         this.initializeComponents();
 
@@ -107,17 +75,11 @@ public class JMainMenu extends JFrame {
         JPanel panel2 = this.createPanelTranslations();
         JPanel panel3 = this.createPanelBotton();
 
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        mainPanel.add(panel1);
-        mainPanel.add(panel2);
-        mainPanel.add(panel3);
-
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
-
-        this.add(scrollPane);
-
+        this.add(panel1);
+        this.add(panel2);
+        this.add(panel3);
     }
 
 
@@ -362,29 +324,36 @@ public class JMainMenu extends JFrame {
         public void actionPerformed(ActionEvent ev) {
 
             try {
-                String spanishText = JMainMenu.this.fieldSpanish.getText();
-                String englishText = JMainMenu.this.fieldEnglish.getText();
+                String translatorKey = TranslationSuppliersPanel.getInstance(null, null).getTranslatorKey();
+
+                ICustomTranslator translator = AbstractTranslator.getTranslator(translatorKey);
+
+                String spanishText = TranslationsPanel.this.fieldSpanish.getText();
+                String englishText = TranslationsPanel.this.fieldEnglish.getText();
 
                 if (spanishText == null) {
                     spanishText = "";
                 }
-                if (englishText == null) {
-                    englishText = "";
+
+                if ((englishText == null) || englishText.isEmpty()) {
+                    String englishTranslation = translator.translate("es", "en", spanishText);
+                    TranslationsPanel.this.fieldEnglish.setText(englishTranslation);
+                    englishText = englishTranslation != null ? englishTranslation : "";
                 }
 
-                String gallegoTranslation = GoogleTranslatorUtils.translate("es", "gl", spanishText);
-                String catalanTranslation = GoogleTranslatorUtils.translate("es", "ca", spanishText);
-                String portugueseTranslation = GoogleTranslatorUtils.translate("es", "pt", spanishText);
-                String franceTranslation = GoogleTranslatorUtils.translate("en", "fr", englishText);
-                String chineseTranslation = GoogleTranslatorUtils.translate("en", "zh", englishText);
-                String germanTranslation = GoogleTranslatorUtils.translate("en", "de", englishText);
+                String gallegoTranslation = translator.translate("es", "gl", spanishText);
+                String catalanTranslation = translator.translate("es", "ca", spanishText);
+                String portugueseTranslation = translator.translate("es", "pt", spanishText);
+                String franceTranslation = translator.translate("en", "fr", englishText);
+                String chineseTranslation = translator.translate("en", "zh", englishText);
+                String germanTranslation = translator.translate("en", "de", englishText);
 
-                JMainMenu.this.fieldGallego.setText(gallegoTranslation);
-                JMainMenu.this.fieldCatalan.setText(catalanTranslation);
-                JMainMenu.this.fieldPortuguese.setText(portugueseTranslation);
-                JMainMenu.this.fieldFrances.setText(franceTranslation);
-                JMainMenu.this.fieldChinese.setText(chineseTranslation);
-                JMainMenu.this.fieldGerman.setText(germanTranslation);
+                TranslationsPanel.this.fieldGallego.setText(gallegoTranslation);
+                TranslationsPanel.this.fieldCatalan.setText(catalanTranslation);
+                TranslationsPanel.this.fieldPortuguese.setText(portugueseTranslation);
+                TranslationsPanel.this.fieldFrances.setText(franceTranslation);
+                TranslationsPanel.this.fieldChinese.setText(chineseTranslation);
+                TranslationsPanel.this.fieldGerman.setText(germanTranslation);
 
             } catch (Exception e) {
 
@@ -403,15 +372,14 @@ public class JMainMenu extends JFrame {
         @Override
         public void actionPerformed(ActionEvent ev) {
 
-            JMainMenu.this.fieldSpanish.setText(null);
-            JMainMenu.this.fieldEnglish.setText(null);
-            JMainMenu.this.fieldGallego.setText(null);
-            JMainMenu.this.fieldPortuguese.setText(null);
-            JMainMenu.this.fieldFrances.setText(null);
-            JMainMenu.this.fieldChinese.setText(null);
-            JMainMenu.this.fieldGerman.setText(null);
-            JMainMenu.this.fieldCatalan.setText(null);
+            TranslationsPanel.this.fieldSpanish.setText(null);
+            TranslationsPanel.this.fieldEnglish.setText(null);
+            TranslationsPanel.this.fieldGallego.setText(null);
+            TranslationsPanel.this.fieldPortuguese.setText(null);
+            TranslationsPanel.this.fieldFrances.setText(null);
+            TranslationsPanel.this.fieldChinese.setText(null);
+            TranslationsPanel.this.fieldGerman.setText(null);
+            TranslationsPanel.this.fieldCatalan.setText(null);
         }
     }
-
 }

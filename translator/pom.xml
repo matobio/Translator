@@ -13,7 +13,7 @@
 	<properties>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<!-- 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding> -->
+		<!-- <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding> -->
 
 		<java.version>1.8</java.version>
 
@@ -148,7 +148,7 @@
 			<groupId>com.github.insubstantial</groupId>
 			<artifactId>substance</artifactId>
 			<version>7.2.1</version>
-
 		</dependency>
+
 	</dependencies>
 </project>
