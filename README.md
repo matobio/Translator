@@ -1,6 +1,11 @@
 # Translator by Tobío
 
-Java application to translate text to differents languages
+Java application to translate text to differents languages.
+
+
+
+Available tranlation APIs:
+* Google Tranlator API
 
 
 # Installation instructions
