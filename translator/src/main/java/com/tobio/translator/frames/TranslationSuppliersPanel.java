@@ -51,22 +51,22 @@ public class TranslationSuppliersPanel extends JPanel {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JPanel panel1 = this.createPanel();
+        JPanel panel = this.createPanel();
 
-        this.add(panel1);
+        this.add(panel);
 
     }
 
 
     protected JPanel createPanel() {
 
-        JPanel panel1 = new JPanel(new GridBagLayout());
+        JPanel panel = new JPanel(new GridBagLayout());
 
         // Add buttons to group
         this.buttonGroup.add(this.btnGoogle);
 
         // Add the buttons
-        panel1.add(this.btnGoogle);
+        panel.add(this.btnGoogle);
 
         // Set the panel border
         TitledBorder border = new TitledBorder(Constants.PROVEDORES);
@@ -74,9 +74,9 @@ public class TranslationSuppliersPanel extends JPanel {
         border.setTitlePosition(TitledBorder.TOP);
         border.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-        panel1.setBorder(border);
+        panel.setBorder(border);
 
-        return panel1;
+        return panel;
     }
 
 

@@ -481,6 +481,9 @@ public class TranslationsPanel extends JPanel {
             this.buttonUp.setPreferredSize(new Dimension(width, heigth));
             this.buttonDown.setPreferredSize(new Dimension(width, heigth));
 
+            this.buttonUp.setBorder(null);
+            this.buttonDown.setBorder(null);
+
             panelButtons.add(this.buttonUp);
             panelButtons.add(this.buttonDown);
 

@@ -19,4 +19,10 @@ public class Constants {
     public static final String PROVEDORES                = "Provedores";
     public static final String TRANSLATIONS              = "Translations";
 
+    public static final String MENU_LOOK_AND_FEELS       = "Cambiar lookAndFeel";
+
+    public static final String APPLY                     = "Aplicar";
+
+    public static final String DEFAULT                   = "Por defecto";
+
 }

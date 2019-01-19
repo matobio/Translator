@@ -149,6 +149,24 @@
 			<artifactId>substance</artifactId>
 			<version>7.2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.devzendo</groupId>
+			<artifactId>Quaqua</artifactId>
+			<version>7.3.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.jtattoo/JTattoo -->
+		<dependency>
+			<groupId>com.jtattoo</groupId>
+			<artifactId>JTattoo</artifactId>
+			<version>1.6.7</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.apple/AppleJavaExtensions -->
+		<dependency>
+			<groupId>com.apple</groupId>
+			<artifactId>AppleJavaExtensions</artifactId>
+			<version>1.4</version>
+		</dependency>
+
 
 	</dependencies>
 </project>

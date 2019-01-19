@@ -15,6 +15,7 @@ public class AppMenu extends JMenu {
 
     protected JMenuItem       menuItemTranslations;
     protected JMenuItem       menuItemProveedores;
+    protected JMenuItem       menuItemLookAndFeels;
 
 
     protected AppMenu(Map<String, Object> params) {
@@ -46,9 +47,11 @@ public class AppMenu extends JMenu {
 
         this.menuItemTranslations = this.createMenuItemTranslations();
         this.menuItemProveedores = this.createMenuItemProveedores();
+        this.menuItemLookAndFeels = this.createMenuItemLookAndFeels();
 
         menuItems.add(this.menuItemTranslations);
         menuItems.add(this.menuItemProveedores);
+        menuItems.add(this.menuItemLookAndFeels);
 
         return menuItems;
     }
@@ -64,6 +67,11 @@ public class AppMenu extends JMenu {
     }
 
 
+    protected JMenuItem createMenuItemLookAndFeels() {
+        return new JMenuItem(Constants.MENU_LOOK_AND_FEELS);
+    }
+
+
     protected void addActionListeners() {
 
         this.menuItemTranslations.addActionListener(ev -> {
@@ -72,6 +80,10 @@ public class AppMenu extends JMenu {
 
         this.menuItemProveedores.addActionListener(ev -> {
             AppMainPanel.getInstance().changeState(States.MENU_PROVEEDORES_STATE);
+        });
+
+        this.menuItemLookAndFeels.addActionListener(ev -> {
+            AppMainPanel.getInstance().changeState(States.MENU_LOOK_AND_FEEL_STATE);
         });
     }
 

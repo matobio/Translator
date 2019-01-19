@@ -11,7 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
+import com.tobio.translator.lookandfeels.LookAndFeelUtils;
 import com.tobio.translator.utils.ImageUtils;
 
 public class AppMainPanel extends JFrame {
@@ -25,6 +28,7 @@ public class AppMainPanel extends JFrame {
 
     public JPanel                 translationsPanel;
     public JPanel                 translationSuppliersPanel;
+    public JPanel                 lookAndFeelPanel;
 
 
     public static AppMainPanel getInstance() {
@@ -38,12 +42,24 @@ public class AppMainPanel extends JFrame {
     protected AppMainPanel() {
         super("Traductor by Tobío");
 
+        LookAndFeelUtils.getInstance().init();
+
         this.init();
 
         try {
-            // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            LookAndFeelUtils.setDefaultLookAndFeel(UIManager.getLookAndFeel());
+
+            // UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
+            // UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+            // UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
+            // UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
+            // UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
+            // UIManager.setLookAndFeel("com.jtattoo.plaf.graphite.GraphiteLookAndFeel");
+
+            SwingUtilities.updateComponentTreeUI(this);
+
         } catch (Exception ex) {
-            ex.printStackTrace();
+
         }
 
     }
@@ -77,6 +93,7 @@ public class AppMainPanel extends JFrame {
 
         this.translationsPanel = this.createTranslationsPanel();
         this.translationSuppliersPanel = this.createTranslationSuppliersPanel();
+        this.lookAndFeelPanel = this.createLookAndFeelPanel();
 
         this.mainPanel = new JPanel();
         this.mainPanel.setLayout(new GridLayout());
@@ -84,7 +101,12 @@ public class AppMainPanel extends JFrame {
         this.scrollPanel = new JScrollPane();
         this.scrollPanel = new JScrollPane(this.translationsPanel);
 
-        this.changeState(States.MENU_TRANSLATIONS_STATE);
+        // this.changeState(States.MENU_TRANSLATIONS_STATE);
+        this.mainPanel.removeAll();
+        this.mainPanel.add(this.scrollPanel);
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
+
         this.setJMenuBar(menubar);
 
         this.add(this.mainPanel);
@@ -93,22 +115,27 @@ public class AppMainPanel extends JFrame {
 
 
     public void changeState(int state) {
+
         switch (state) {
             case States.MENU_TRANSLATIONS_STATE:
                 this.mainPanel.removeAll();
                 this.mainPanel.add(this.scrollPanel);
-                this.mainPanel.revalidate();
-                this.mainPanel.repaint();
                 break;
             case States.MENU_PROVEEDORES_STATE:
                 this.mainPanel.removeAll();
                 this.mainPanel.add(this.translationSuppliersPanel);
-                this.mainPanel.revalidate();
-                this.mainPanel.repaint();
+                break;
+            case States.MENU_LOOK_AND_FEEL_STATE:
+                this.mainPanel.removeAll();
+                this.mainPanel.add(this.lookAndFeelPanel);
                 break;
             default:
                 break;
         }
+
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
+        SwingUtilities.updateComponentTreeUI(AppMainPanel.getInstance());
     }
 
 
@@ -119,6 +146,11 @@ public class AppMainPanel extends JFrame {
 
     protected JPanel createTranslationsPanel() {
         return TranslationsPanel.newInstance(new GridBagLayout(), new HashMap<>());
+    }
+
+
+    protected JPanel createLookAndFeelPanel() {
+        return LookAndFeelPanel.newInstance(new GridBagLayout(), new HashMap<>());
     }
 
 
