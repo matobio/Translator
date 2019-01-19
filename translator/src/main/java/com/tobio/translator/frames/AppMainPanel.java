@@ -12,6 +12,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.tobio.translator.utils.ImageUtils;
+
 public class AppMainPanel extends JFrame {
 
     private static final long     serialVersionUID = 1L;
@@ -38,6 +40,12 @@ public class AppMainPanel extends JFrame {
 
         this.init();
 
+        try {
+            // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 
 
@@ -56,7 +64,7 @@ public class AppMainPanel extends JFrame {
 
     protected void addIconImage() {
 
-        URL url = Thread.currentThread().getContextClassLoader().getResource("images/icon1.png");
+        URL url = Thread.currentThread().getContextClassLoader().getResource(ImageUtils.APP_ICON);
         Toolkit kit = Toolkit.getDefaultToolkit();
         Image img = kit.createImage(url);
         this.setIconImage(img);

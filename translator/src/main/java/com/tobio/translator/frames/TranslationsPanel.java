@@ -1,18 +1,29 @@
 package com.tobio.translator.frames;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,33 +33,42 @@ import javax.swing.border.TitledBorder;
 import com.tobio.translator.interfaces.ICustomTranslator;
 import com.tobio.translator.translators.AbstractTranslator;
 import com.tobio.translator.utils.Constants;
+import com.tobio.translator.utils.ImageUtils;
 
 public class TranslationsPanel extends JPanel {
 
-    private static final long serialVersionUID = 1L;
+    private static final long                  serialVersionUID       = 1L;
+
+    protected JPanel                           panelTranslationsHeader;
+    protected JPanel                           panelTranslations;
 
     // Labels
-    protected JLabel          labelSpanish     = null;
-    protected JLabel          labelGallego     = null;
-    protected JLabel          labelEnglish     = null;
-    protected JLabel          labelPortuguese  = null;
-    protected JLabel          labelChinese     = null;
-    protected JLabel          labelFrances     = null;
-    protected JLabel          labelGerman      = null;
-    protected JLabel          labelCatalan     = null;
+    protected JLabel                           labelSpanish           = new JLabel(Constants.SPANISH);
+    protected JLabel                           labelGallego           = new JLabel(Constants.GALLEGO);
+    protected JLabel                           labelEnglish           = new JLabel(Constants.ENGLISH);
+    protected JLabel                           labelPortuguese        = new JLabel(Constants.PORTUGUES);
+    protected JLabel                           labelChinese           = new JLabel(Constants.CHINO);
+    protected JLabel                           labelFrances           = new JLabel(Constants.FRANCES);
+    protected JLabel                           labelGerman            = new JLabel(Constants.GERMAN);
+    protected JLabel                           labelCatalan           = new JLabel(Constants.CATALAN);
 
     // Textfields
-    protected JTextArea       fieldSpanish     = null;
-    protected JTextArea       fieldGallego     = null;
-    protected JTextArea       fieldEnglish     = null;
-    protected JTextArea       fieldPortuguese  = null;
-    protected JTextArea       fieldChinese     = null;
-    protected JTextArea       fieldFrances     = null;
-    protected JTextArea       fieldGerman      = null;
-    protected JTextArea       fieldCatalan     = null;
+    protected JTextArea                        fieldSpanish           = new JTextArea();
+    protected JTextArea                        fieldGallego           = new JTextArea();
+    protected JTextArea                        fieldEnglish           = new JTextArea();
+    protected JTextArea                        fieldPortuguese        = new JTextArea();
+    protected JTextArea                        fieldChinese           = new JTextArea();
+    protected JTextArea                        fieldFrances           = new JTextArea();
+    protected JTextArea                        fieldGerman            = new JTextArea();
+    protected JTextArea                        fieldCatalan           = new JTextArea();
 
-    protected JButton         btnTranslate     = null;
-    protected JButton         btnClean         = null;
+    protected transient List<PanelTranslation> translationsPanelsList = new ArrayList<>();
+
+    protected JButton                          btnTranslate           = null;
+    protected JButton                          btnClean               = null;
+
+    protected Point                            pPoint;
+    protected MouseEvent                       mouseEventPressed;
 
 
     protected TranslationsPanel(LayoutManager layout, Map<String, Object> params) {
@@ -71,42 +91,19 @@ public class TranslationsPanel extends JPanel {
 
         this.initializeComponents();
 
-        JPanel panel1 = this.createPanelHeader();
-        JPanel panel2 = this.createPanelTranslations();
+        this.panelTranslationsHeader = this.createPanelTranslationsHeader();
+        this.panelTranslations = this.createPanelTranslations();
         JPanel panel3 = this.createPanelBotton();
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        this.add(panel1);
-        this.add(panel2);
+        this.add(this.panelTranslationsHeader);
+        this.add(this.panelTranslations);
         this.add(panel3);
     }
 
 
     protected JPanel createPanelBotton() {
-
-        JPanel panel3 = new JPanel(new GridBagLayout());
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
-        constraints.insets = new Insets(10, 10, 10, 10);
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        // constraints.gridwidth = 3;
-        constraints.anchor = GridBagConstraints.WEST;
-        panel3.add(this.btnTranslate, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        // constraints.gridwidth = 3;
-        constraints.anchor = GridBagConstraints.EAST;
-        panel3.add(this.btnClean, constraints);
-        return panel3;
-    }
-
-
-    protected JPanel createPanelTranslations() {
 
         JPanel panel = new JPanel(new GridBagLayout());
 
@@ -116,51 +113,33 @@ public class TranslationsPanel extends JPanel {
 
         constraints.gridx = 0;
         constraints.gridy = 0;
-        panel.add(this.labelGallego, constraints);
+        constraints.anchor = GridBagConstraints.WEST;
+        panel.add(this.btnTranslate, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 0;
-        panel.add(this.fieldGallego, constraints);
+        constraints.anchor = GridBagConstraints.EAST;
+        panel.add(this.btnClean, constraints);
+        return panel;
+    }
 
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        panel.add(this.labelCatalan, constraints);
 
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        panel.add(this.fieldCatalan, constraints);
+    protected JPanel createPanelTranslations() {
 
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        panel.add(this.labelPortuguese, constraints);
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        constraints.gridx = 1;
-        constraints.gridy = 2;
-        panel.add(this.fieldPortuguese, constraints);
+        this.translationsPanelsList.add(new PanelTranslation(this.labelGallego, this.fieldGallego, 0));
+        this.translationsPanelsList.add(new PanelTranslation(this.labelCatalan, this.fieldCatalan, 1));
+        this.translationsPanelsList.add(new PanelTranslation(this.labelPortuguese, this.fieldPortuguese, 2));
+        this.translationsPanelsList.add(new PanelTranslation(this.labelChinese, this.fieldChinese, 3));
+        this.translationsPanelsList.add(new PanelTranslation(this.labelFrances, this.fieldFrances, 4));
+        this.translationsPanelsList.add(new PanelTranslation(this.labelGerman, this.fieldGerman, 5));
 
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        panel.add(this.labelChinese, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 3;
-        panel.add(this.fieldChinese, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        panel.add(this.labelFrances, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 4;
-        panel.add(this.fieldFrances, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 5;
-        panel.add(this.labelGerman, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 5;
-        panel.add(this.fieldGerman, constraints);
+        this.translationsPanelsList = this.sortPanelTranslations();
+        for (PanelTranslation jPanel : this.translationsPanelsList) {
+            panel.add(jPanel);
+        }
 
         // Add the border
         TitledBorder border = new TitledBorder("Traducciones");
@@ -173,82 +152,115 @@ public class TranslationsPanel extends JPanel {
         return panel;
     }
 
+    class MouseMotionListener implements java.awt.event.MouseMotionListener {
 
-    protected JPanel createPanelHeader() {
+        protected JPanel panel;
 
-        JPanel panel1 = new JPanel(new GridBagLayout());
 
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
-        constraints.insets = new Insets(10, 10, 10, 10);
+        public MouseMotionListener(JPanel panel) {
+            this.panel = panel;
+        }
 
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        panel1.add(this.labelSpanish, constraints);
 
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        panel1.add(this.fieldSpanish, constraints);
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            if (e.getSource() == this.panel) {
+                TranslationsPanel.this.pPoint = this.panel.getLocation(TranslationsPanel.this.pPoint);
+                int x = (TranslationsPanel.this.pPoint.x - TranslationsPanel.this.mouseEventPressed.getX()) + e.getX();
+                int y = (TranslationsPanel.this.pPoint.y - TranslationsPanel.this.mouseEventPressed.getY()) + e.getY();
+                this.panel.setLocation(x, y);
+            }
+        }
 
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        panel1.add(this.labelEnglish, constraints);
 
-        constraints.gridx = 1;
-        constraints.gridy = 1;
-        panel1.add(this.fieldEnglish, constraints);
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
+    class TranslationsMouseListener implements MouseListener {
+
+        protected JPanel panel;
+
+
+        public TranslationsMouseListener(JPanel panel) {
+            this.panel = panel;
+        }
+
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (e.getSource() == this.panel) {
+                TranslationsPanel.this.mouseEventPressed = e;
+            }
+        }
+
+
+        @Override
+        public void mouseClicked(MouseEvent e) {}
+
+
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+
+
+        @Override
+        public void mouseExited(MouseEvent e) {}
+
+
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+
+    }
+
+
+    protected JPanel createPanelTranslationsHeader() {
+
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        panel.add(new PanelTranslation(this.labelSpanish, this.fieldSpanish, 0));
+        panel.add(new PanelTranslation(this.labelEnglish, this.fieldEnglish, 1));
 
         TitledBorder border = new TitledBorder("Traducir ");
         border.setTitleJustification(TitledBorder.LEFT);
         border.setTitlePosition(TitledBorder.TOP);
         border.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-        panel1.setBorder(border);
-        return panel1;
+        panel.setBorder(border);
+        return panel;
     }
 
 
     protected void initializeComponents() {
 
+        int width = 70;
+        int height = 50;
+
         // Labels
-        this.labelSpanish = new JLabel(Constants.SPANISH);
-        this.labelGallego = new JLabel(Constants.GALLEGO);
-        this.labelEnglish = new JLabel(Constants.ENGLISH);
-        this.labelPortuguese = new JLabel(Constants.PORTUGUES);
-        this.labelChinese = new JLabel(Constants.CHINO);
-        this.labelFrances = new JLabel(Constants.FRANCES);
-        this.labelGerman = new JLabel(Constants.GERMAN);
-        this.labelCatalan = new JLabel(Constants.CATALAN);
+        List<JLabel> jLabelList = Arrays.asList(this.labelSpanish, this.labelGallego, this.labelEnglish, this.labelPortuguese, this.labelChinese, this.labelFrances, this.labelGerman,
+                this.labelCatalan);
+        for (JLabel jLabel : jLabelList) {
+            jLabel.setPreferredSize(new Dimension(width, height));
+        }
 
         // Textfields
         int columns = 100;
         int rows = 2;
+
         this.fieldSpanish = new JTextArea(rows, columns);
         this.fieldEnglish = new JTextArea(rows, columns);
 
-        this.fieldGallego = new JTextArea(rows, columns);
-        this.fieldGallego.setEditable(false);
-        this.fieldGallego.setBackground(Color.LIGHT_GRAY);
-
-        this.fieldCatalan = new JTextArea(rows, columns);
-        this.fieldCatalan.setEditable(false);
-        this.fieldCatalan.setBackground(Color.LIGHT_GRAY);
-
-        this.fieldPortuguese = new JTextArea(rows, columns);
-        this.fieldPortuguese.setEditable(false);
-        this.fieldPortuguese.setBackground(Color.LIGHT_GRAY);
-
-        this.fieldChinese = new JTextArea(rows, columns);
-        this.fieldChinese.setEditable(false);
-        this.fieldChinese.setBackground(Color.LIGHT_GRAY);
-
-        this.fieldFrances = new JTextArea(rows, columns);
-        this.fieldFrances.setEditable(false);
-        this.fieldFrances.setBackground(Color.LIGHT_GRAY);
-
-        this.fieldGerman = new JTextArea(rows, columns);
-        this.fieldGerman.setEditable(false);
-        this.fieldGerman.setBackground(Color.LIGHT_GRAY);
+        List<JTextArea> jTextAreaList = Arrays.asList(this.fieldGallego, this.fieldCatalan, this.fieldPortuguese, this.fieldChinese, this.fieldFrances, this.fieldGerman);
+        for (JTextArea jTextArea : jTextAreaList) {
+            jTextArea.setRows(rows);
+            jTextArea.setColumns(columns);
+            jTextArea.setEditable(false);
+            jTextArea.setBackground(Color.LIGHT_GRAY);
+        }
 
         // Button translate
         this.btnTranslate = new JButton(Constants.TRANSLATE);
@@ -381,5 +393,205 @@ public class TranslationsPanel extends JPanel {
             TranslationsPanel.this.fieldGerman.setText(null);
             TranslationsPanel.this.fieldCatalan.setText(null);
         }
+    }
+
+    class PanelTranslation extends JPanel {
+
+        private static final long serialVersionUID = 1L;
+
+        protected JLabel          label;
+        protected JTextArea       jTextArea;
+        protected JButton         buttonUp         = new JButton();;
+        protected JButton         buttonDown       = new JButton();
+
+        protected int             order            = 0;
+
+
+        public PanelTranslation(JLabel label, JTextArea jTextArea, int order) {
+            super(new GridBagLayout());
+
+            this.label = label;
+            this.jTextArea = jTextArea;
+            this.order = order;
+
+            this.init();
+        }
+
+
+        protected void init() {
+            this.createPanel();
+
+            this.addActionListeners();
+        }
+
+
+        protected void addActionListeners() {
+
+            this.buttonUp.addActionListener(new ButtonUpActionListener());
+            this.buttonDown.addActionListener(new ButtonDownActionListener());
+        }
+
+
+        protected void createPanel() {
+
+            JPanel panelButtons = this.createPanelButtons();
+
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.anchor = GridBagConstraints.WEST;
+            constraints.insets = new Insets(10, 10, 10, 10);
+
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            this.add(this.label, constraints);
+
+            if (!this.label.getText().equals(Constants.SPANISH) && !this.label.getText().equals(Constants.ENGLISH)) {
+
+                constraints.gridx = 1;
+                constraints.gridy = 0;
+                this.add(panelButtons, constraints);
+            }
+
+            constraints.gridx = 2;
+            constraints.gridy = 0;
+            this.add(this.jTextArea, constraints);
+
+            // this.addMouseListener(new TranslationsMouseListener(this));
+            // this.addMouseMotionListener(new MouseMotionListener(this));
+
+        }
+
+
+        protected JPanel createPanelButtons() {
+
+            JPanel panelButtons = new JPanel(new GridBagLayout());
+            panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.Y_AXIS));
+
+            Icon iconArrowUp = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(ImageUtils.IMAGE_ARROW_UP));
+            Icon iconArrowDown = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(ImageUtils.IMAGE_ARROW_DOWN));
+
+            this.buttonUp.setIcon(iconArrowUp);
+            this.buttonDown.setIcon(iconArrowDown);
+
+            // this.buttonUp.setOpaque(false);
+            // this.buttonUp.setContentAreaFilled(false);
+            // this.buttonUp.setBorderPainted(false);
+
+            int width = 14;
+            int heigth = 14;
+            this.buttonUp.setPreferredSize(new Dimension(width, heigth));
+            this.buttonDown.setPreferredSize(new Dimension(width, heigth));
+
+            panelButtons.add(this.buttonUp);
+            panelButtons.add(this.buttonDown);
+
+            return panelButtons;
+        }
+
+
+        public int getOrder() {
+            return this.order;
+        }
+
+
+        public void setOrder(int order) {
+            this.order = order;
+        }
+
+        class ButtonUpActionListener implements ActionListener {
+
+            public ButtonUpActionListener() {
+
+            }
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TranslationsPanel.this.decrementOrder(PanelTranslation.this);
+            }
+        }
+
+        class ButtonDownActionListener implements ActionListener {
+
+            public ButtonDownActionListener() {
+
+            }
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TranslationsPanel.this.incrementOrder(PanelTranslation.this);
+            }
+        }
+
+
+        @Override
+        public String toString() {
+            return this.label.getText() + ", Order --> " + this.order + "\n";
+        }
+    }
+
+
+    protected void incrementOrder(PanelTranslation panel) {
+
+        int index = this.translationsPanelsList.indexOf(panel);
+
+        int size = this.translationsPanelsList.size();
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                panel.setOrder(panel.getOrder() + 1);
+            }
+            if (i == (index + 1)) {
+                this.translationsPanelsList.get(i).setOrder(this.translationsPanelsList.get(i).getOrder() - 1);
+            }
+        }
+        this.normalizeOrder();
+        this.customRepaint();
+    }
+
+
+    protected void decrementOrder(PanelTranslation panel) {
+
+        int index = this.translationsPanelsList.indexOf(panel);
+
+        int size = this.translationsPanelsList.size();
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                panel.setOrder(panel.getOrder() - 1);
+            }
+            if (i == (index - 1)) {
+                this.translationsPanelsList.get(i).setOrder(this.translationsPanelsList.get(i).getOrder() + 1);
+            }
+        }
+        this.normalizeOrder();
+        this.customRepaint();
+    }
+
+
+    private void normalizeOrder() {
+
+        this.translationsPanelsList = this.sortPanelTranslations();
+        int size = this.translationsPanelsList.size();
+        for (int i = 0; i < size; i++) {
+            this.translationsPanelsList.get(i).setOrder(i);
+        }
+    }
+
+
+    protected List<PanelTranslation> sortPanelTranslations() {
+        return this.translationsPanelsList.stream().sorted(Comparator.comparing(PanelTranslation::getOrder)).collect(Collectors.toList());
+    }
+
+
+    protected void customRepaint() {
+
+        this.panelTranslations.removeAll();
+
+        this.translationsPanelsList = this.sortPanelTranslations();
+
+        for (PanelTranslation jPanel : this.translationsPanelsList) {
+            this.panelTranslations.add(jPanel);
+        }
+
+        AppMainPanel.getInstance().changeState(States.MENU_TRANSLATIONS_STATE);
     }
 }
