@@ -6,8 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
@@ -49,10 +47,16 @@ public class LookAndFeelPanel extends JPanel {
 
     protected void addActionListeners() {
 
-        this.buttonApply.addActionListener(new ButtonApplyActionListener());
+        this.buttonApply.addActionListener(ev -> {
+            String selectedLookAndFeel = LookAndFeelPanel.this.list.getSelectedValue();
+
+            if (selectedLookAndFeel != null) {
+                LookAndFeelUtils.getInstance().restartAndLoadLookAndFeel(selectedLookAndFeel);
+            }
+        });
 
         this.buttonApplyDefault.addActionListener(ev -> {
-            LookAndFeelUtils.getInstance().changeLookAndFeel(LookAndFeelUtils.getDefaultLookAndFeel());
+            LookAndFeelUtils.getInstance().restartAndLoadLookAndFeel(LookAndFeelUtils.getDefaultLookAndFeel().getClass().getName());
         });
     }
 
@@ -109,7 +113,7 @@ public class LookAndFeelPanel extends JPanel {
 
     protected void initializeComponents() {
 
-        this.initizliceList();
+        this.initializeList();
 
         this.initialiceButtons();
 
@@ -127,7 +131,7 @@ public class LookAndFeelPanel extends JPanel {
     }
 
 
-    protected void initizliceList() {
+    protected void initializeList() {
 
         this.addListElements();
 
@@ -145,23 +149,4 @@ public class LookAndFeelPanel extends JPanel {
         }
     }
 
-    class ButtonApplyActionListener implements ActionListener {
-
-        public ButtonApplyActionListener() {
-
-        }
-
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            String selectedLookAndFeel = LookAndFeelPanel.this.list.getSelectedValue();
-
-            if (selectedLookAndFeel != null) {
-                LookAndFeelUtils.getInstance().changeLookAndFeel(selectedLookAndFeel);
-            }
-
-        }
-
-    }
 }

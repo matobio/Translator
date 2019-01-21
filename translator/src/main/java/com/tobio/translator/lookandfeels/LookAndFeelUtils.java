@@ -7,6 +7,7 @@ import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.tobio.translator.App;
 import com.tobio.translator.frames.AppMainPanel;
 
 public class LookAndFeelUtils {
@@ -74,26 +75,6 @@ public class LookAndFeelUtils {
     }
 
 
-    public void changeLookAndFeel(String lookAndFeel) {
-        try {
-            UIManager.setLookAndFeel(lookAndFeel);
-            SwingUtilities.updateComponentTreeUI(AppMainPanel.getInstance());
-
-        } catch (Exception ex) {
-        }
-    }
-
-
-    public void changeLookAndFeel(LookAndFeel lookAndFeel) {
-        try {
-            UIManager.setLookAndFeel(lookAndFeel);
-            SwingUtilities.updateComponentTreeUI(AppMainPanel.getInstance());
-
-        } catch (Exception ex) {
-        }
-    }
-
-
     public static List<String> getListLookAndFeelUtils() {
         return LookAndFeelUtils.listLookAndFeelUtils;
     }
@@ -111,5 +92,42 @@ public class LookAndFeelUtils {
 
     public static void setDefaultLookAndFeel(LookAndFeel defaultLookAndFeel) {
         LookAndFeelUtils.defaultLookAndFeel = defaultLookAndFeel;
+    }
+
+
+    public void changeLookAndFeel(LookAndFeel lookAndFeel) {
+        if (lookAndFeel != null) {
+            this.changeLookAndFeel(lookAndFeel.getClass().getName());
+        }
+    }
+
+
+    public void changeLookAndFeel(String lookAndFeel) {
+        try {
+            UIManager.setLookAndFeel(lookAndFeel);
+            SwingUtilities.updateComponentTreeUI(AppMainPanel.getInstance());
+
+        } catch (Exception ex) {
+        }
+    }
+
+
+    public void restartAndLoadLookAndFeel(String lookAndFeel) {
+        try {
+
+            // System.getProperty("java.class.path"));
+            String command = this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile() + " " + App.ARGS_LOOK_AND_FEEL + " " + lookAndFeel;
+
+            if (lookAndFeel != null) {
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(command);
+
+                Runtime.getRuntime().exec(sb.toString());
+                System.exit(0);
+            }
+        } catch (Exception e) {
+
+        }
     }
 }

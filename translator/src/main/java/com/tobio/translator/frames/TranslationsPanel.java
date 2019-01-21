@@ -7,6 +7,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -37,38 +40,38 @@ import com.tobio.translator.utils.ImageUtils;
 
 public class TranslationsPanel extends JPanel {
 
-    private static final long                  serialVersionUID       = 1L;
+    private static final long                     serialVersionUID       = 1L;
 
-    protected JPanel                           panelTranslationsHeader;
-    protected JPanel                           panelTranslations;
+    protected JPanel                              panelTranslationsHeader;
+    protected JPanel                              panelTranslations;
 
     // Labels
-    protected JLabel                           labelSpanish           = new JLabel(Constants.SPANISH);
-    protected JLabel                           labelGallego           = new JLabel(Constants.GALLEGO);
-    protected JLabel                           labelEnglish           = new JLabel(Constants.ENGLISH);
-    protected JLabel                           labelPortuguese        = new JLabel(Constants.PORTUGUES);
-    protected JLabel                           labelChinese           = new JLabel(Constants.CHINO);
-    protected JLabel                           labelFrances           = new JLabel(Constants.FRANCES);
-    protected JLabel                           labelGerman            = new JLabel(Constants.GERMAN);
-    protected JLabel                           labelCatalan           = new JLabel(Constants.CATALAN);
+    protected JLabel                              labelSpanish           = new JLabel(Constants.SPANISH);
+    protected JLabel                              labelGallego           = new JLabel(Constants.GALLEGO);
+    protected JLabel                              labelEnglish           = new JLabel(Constants.ENGLISH);
+    protected JLabel                              labelPortuguese        = new JLabel(Constants.PORTUGUES);
+    protected JLabel                              labelChinese           = new JLabel(Constants.CHINO);
+    protected JLabel                              labelFrances           = new JLabel(Constants.FRANCES);
+    protected JLabel                              labelGerman            = new JLabel(Constants.GERMAN);
+    protected JLabel                              labelCatalan           = new JLabel(Constants.CATALAN);
 
     // Textfields
-    protected JTextArea                        fieldSpanish           = new JTextArea();
-    protected JTextArea                        fieldGallego           = new JTextArea();
-    protected JTextArea                        fieldEnglish           = new JTextArea();
-    protected JTextArea                        fieldPortuguese        = new JTextArea();
-    protected JTextArea                        fieldChinese           = new JTextArea();
-    protected JTextArea                        fieldFrances           = new JTextArea();
-    protected JTextArea                        fieldGerman            = new JTextArea();
-    protected JTextArea                        fieldCatalan           = new JTextArea();
+    protected JTextArea                           fieldSpanish           = new JTextArea();
+    protected JTextArea                           fieldGallego           = new JTextArea();
+    protected JTextArea                           fieldEnglish           = new JTextArea();
+    protected JTextArea                           fieldPortuguese        = new JTextArea();
+    protected JTextArea                           fieldChinese           = new JTextArea();
+    protected JTextArea                           fieldFrances           = new JTextArea();
+    protected JTextArea                           fieldGerman            = new JTextArea();
+    protected JTextArea                           fieldCatalan           = new JTextArea();
 
-    protected transient List<PanelTranslation> translationsPanelsList = new ArrayList<>();
+    protected transient List<PanelTranslationRow> translationsPanelsList = new ArrayList<>();
 
-    protected JButton                          btnTranslate           = null;
-    protected JButton                          btnClean               = null;
+    protected JButton                             btnTranslate           = null;
+    protected JButton                             btnClean               = null;
 
-    protected Point                            pPoint;
-    protected MouseEvent                       mouseEventPressed;
+    protected Point                               pPoint;
+    protected MouseEvent                          mouseEventPressed;
 
 
     protected TranslationsPanel(LayoutManager layout, Map<String, Object> params) {
@@ -129,15 +132,15 @@ public class TranslationsPanel extends JPanel {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        this.translationsPanelsList.add(new PanelTranslation(this.labelGallego, this.fieldGallego, 0));
-        this.translationsPanelsList.add(new PanelTranslation(this.labelCatalan, this.fieldCatalan, 1));
-        this.translationsPanelsList.add(new PanelTranslation(this.labelPortuguese, this.fieldPortuguese, 2));
-        this.translationsPanelsList.add(new PanelTranslation(this.labelChinese, this.fieldChinese, 3));
-        this.translationsPanelsList.add(new PanelTranslation(this.labelFrances, this.fieldFrances, 4));
-        this.translationsPanelsList.add(new PanelTranslation(this.labelGerman, this.fieldGerman, 5));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelGallego, this.fieldGallego, 0));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelCatalan, this.fieldCatalan, 1));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelPortuguese, this.fieldPortuguese, 2));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelChinese, this.fieldChinese, 3));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelFrances, this.fieldFrances, 4));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelGerman, this.fieldGerman, 5));
 
         this.translationsPanelsList = this.sortPanelTranslations();
-        for (PanelTranslation jPanel : this.translationsPanelsList) {
+        for (PanelTranslationRow jPanel : this.translationsPanelsList) {
             panel.add(jPanel);
         }
 
@@ -222,8 +225,8 @@ public class TranslationsPanel extends JPanel {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        panel.add(new PanelTranslation(this.labelSpanish, this.fieldSpanish, 0));
-        panel.add(new PanelTranslation(this.labelEnglish, this.fieldEnglish, 1));
+        panel.add(new PanelTranslationRow(this.labelSpanish, this.fieldSpanish, 0));
+        panel.add(new PanelTranslationRow(this.labelEnglish, this.fieldEnglish, 1));
 
         TitledBorder border = new TitledBorder("Traducir ");
         border.setTitleJustification(TitledBorder.LEFT);
@@ -395,19 +398,20 @@ public class TranslationsPanel extends JPanel {
         }
     }
 
-    class PanelTranslation extends JPanel {
+    class PanelTranslationRow extends JPanel {
 
         private static final long serialVersionUID = 1L;
 
         protected JLabel          label;
         protected JTextArea       jTextArea;
-        protected JButton         buttonUp         = new JButton();;
+        protected JButton         buttonUp         = new JButton();
         protected JButton         buttonDown       = new JButton();
+        protected JButton         buttonCopy       = new JButton();
 
         protected int             order            = 0;
 
 
-        public PanelTranslation(JLabel label, JTextArea jTextArea, int order) {
+        public PanelTranslationRow(JLabel label, JTextArea jTextArea, int order) {
             super(new GridBagLayout());
 
             this.label = label;
@@ -425,16 +429,25 @@ public class TranslationsPanel extends JPanel {
         }
 
 
+        protected void addMouseListeners() {
+
+            // this.addMouseListener(new TranslationsMouseListener(this));
+            // this.addMouseMotionListener(new MouseMotionListener(this));
+        }
+
+
         protected void addActionListeners() {
 
             this.buttonUp.addActionListener(new ButtonUpActionListener());
             this.buttonDown.addActionListener(new ButtonDownActionListener());
+            this.buttonCopy.addActionListener(new ButtonCopyToClipBoardActionListener());
         }
 
 
         protected void createPanel() {
 
-            JPanel panelButtons = this.createPanelButtons();
+            JPanel panelButtons = this.createPanelArrowsButtons();
+            JPanel panelButtonCopy = this.createButtonCopy();
 
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.anchor = GridBagConstraints.WEST;
@@ -445,7 +458,6 @@ public class TranslationsPanel extends JPanel {
             this.add(this.label, constraints);
 
             if (!this.label.getText().equals(Constants.SPANISH) && !this.label.getText().equals(Constants.ENGLISH)) {
-
                 constraints.gridx = 1;
                 constraints.gridy = 0;
                 this.add(panelButtons, constraints);
@@ -453,18 +465,39 @@ public class TranslationsPanel extends JPanel {
 
             constraints.gridx = 2;
             constraints.gridy = 0;
-            this.add(this.jTextArea, constraints);
+            this.add(panelButtonCopy, constraints);
 
-            // this.addMouseListener(new TranslationsMouseListener(this));
-            // this.addMouseMotionListener(new MouseMotionListener(this));
+            constraints.gridx = 3;
+            constraints.gridy = 0;
+            this.add(this.jTextArea, constraints);
 
         }
 
 
-        protected JPanel createPanelButtons() {
+        protected JPanel createButtonCopy() {
 
-            JPanel panelButtons = new JPanel(new GridBagLayout());
-            panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.Y_AXIS));
+            JPanel panel = new JPanel(new GridBagLayout());
+
+            int width = 24;
+            int heigth = 24;
+            this.buttonCopy.setPreferredSize(new Dimension(width, heigth));
+
+            Icon iconCopy = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(ImageUtils.ICON_COPY2));
+            this.buttonCopy.setIcon(iconCopy);
+
+            this.buttonCopy.setBorder(null);
+            this.buttonCopy.setContentAreaFilled(true);
+            this.buttonCopy.setBorderPainted(false);
+            panel.add(this.buttonCopy);
+
+            return panel;
+        }
+
+
+        protected JPanel createPanelArrowsButtons() {
+
+            JPanel panel = new JPanel(new GridBagLayout());
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
             Icon iconArrowUp = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(ImageUtils.IMAGE_ARROW_UP));
             Icon iconArrowDown = new ImageIcon(Thread.currentThread().getContextClassLoader().getResource(ImageUtils.IMAGE_ARROW_DOWN));
@@ -472,9 +505,12 @@ public class TranslationsPanel extends JPanel {
             this.buttonUp.setIcon(iconArrowUp);
             this.buttonDown.setIcon(iconArrowDown);
 
-            // this.buttonUp.setOpaque(false);
-            // this.buttonUp.setContentAreaFilled(false);
-            // this.buttonUp.setBorderPainted(false);
+            this.buttonUp.setBorder(null);
+            this.buttonUp.setContentAreaFilled(true);
+            this.buttonUp.setBorderPainted(false);
+            this.buttonDown.setBorder(null);
+            this.buttonDown.setContentAreaFilled(true);
+            this.buttonDown.setBorderPainted(false);
 
             int width = 14;
             int heigth = 14;
@@ -484,10 +520,10 @@ public class TranslationsPanel extends JPanel {
             this.buttonUp.setBorder(null);
             this.buttonDown.setBorder(null);
 
-            panelButtons.add(this.buttonUp);
-            panelButtons.add(this.buttonDown);
+            panel.add(this.buttonUp);
+            panel.add(this.buttonDown);
 
-            return panelButtons;
+            return panel;
         }
 
 
@@ -509,7 +545,7 @@ public class TranslationsPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                TranslationsPanel.this.decrementOrder(PanelTranslation.this);
+                TranslationsPanel.this.decrementOrder(PanelTranslationRow.this);
             }
         }
 
@@ -522,7 +558,7 @@ public class TranslationsPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                TranslationsPanel.this.incrementOrder(PanelTranslation.this);
+                TranslationsPanel.this.incrementOrder(PanelTranslationRow.this);
             }
         }
 
@@ -531,10 +567,27 @@ public class TranslationsPanel extends JPanel {
         public String toString() {
             return this.label.getText() + ", Order --> " + this.order + "\n";
         }
+
+        class ButtonCopyToClipBoardActionListener implements ActionListener {
+
+            public ButtonCopyToClipBoardActionListener() {
+                // Empty
+            }
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String ctc = PanelTranslationRow.this.jTextArea.getText();
+                StringSelection stringSelection = new StringSelection(ctc);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
+            }
+        }
     }
 
 
-    protected void incrementOrder(PanelTranslation panel) {
+    protected void incrementOrder(PanelTranslationRow panel) {
 
         int index = this.translationsPanelsList.indexOf(panel);
 
@@ -552,7 +605,7 @@ public class TranslationsPanel extends JPanel {
     }
 
 
-    protected void decrementOrder(PanelTranslation panel) {
+    protected void decrementOrder(PanelTranslationRow panel) {
 
         int index = this.translationsPanelsList.indexOf(panel);
 
@@ -580,8 +633,8 @@ public class TranslationsPanel extends JPanel {
     }
 
 
-    protected List<PanelTranslation> sortPanelTranslations() {
-        return this.translationsPanelsList.stream().sorted(Comparator.comparing(PanelTranslation::getOrder)).collect(Collectors.toList());
+    protected List<PanelTranslationRow> sortPanelTranslations() {
+        return this.translationsPanelsList.stream().sorted(Comparator.comparing(PanelTranslationRow::getOrder)).collect(Collectors.toList());
     }
 
 
@@ -591,10 +644,10 @@ public class TranslationsPanel extends JPanel {
 
         this.translationsPanelsList = this.sortPanelTranslations();
 
-        for (PanelTranslation jPanel : this.translationsPanelsList) {
+        for (PanelTranslationRow jPanel : this.translationsPanelsList) {
             this.panelTranslations.add(jPanel);
         }
 
-        AppMainPanel.getInstance().changeState(States.MENU_TRANSLATIONS_STATE);
+        AppMainPanel.getInstance(null).changeState(States.MENU_TRANSLATIONS_STATE);
     }
 }

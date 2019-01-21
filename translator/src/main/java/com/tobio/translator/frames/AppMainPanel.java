@@ -22,6 +22,7 @@ public class AppMainPanel extends JFrame {
     private static final long     serialVersionUID = 1L;
 
     protected static AppMainPanel instance;
+    protected static String       lookAndFeelClass = "";
 
     public JScrollPane            scrollPanel;
     public JPanel                 mainPanel;
@@ -33,21 +34,40 @@ public class AppMainPanel extends JFrame {
 
     public static AppMainPanel getInstance() {
         if (AppMainPanel.instance == null) {
-            AppMainPanel.instance = new AppMainPanel();
+            AppMainPanel.instance = new AppMainPanel(null);
         }
         return AppMainPanel.instance;
     }
 
 
-    protected AppMainPanel() {
+    public static AppMainPanel getInstance(String lookAndFeelClass) {
+        if (AppMainPanel.instance == null) {
+            AppMainPanel.instance = new AppMainPanel(lookAndFeelClass);
+        }
+        return AppMainPanel.instance;
+    }
+
+
+    protected AppMainPanel(String lookAndFeelClass) {
         super("Traductor by Tobío");
 
         LookAndFeelUtils.getInstance().init();
 
-        this.init();
+        this.init(lookAndFeelClass);
+
+        this.loadLookAndFeel(lookAndFeelClass);
+
+    }
+
+
+    protected void loadLookAndFeel(String lookAndFeelClass) {
 
         try {
             LookAndFeelUtils.setDefaultLookAndFeel(UIManager.getLookAndFeel());
+
+            if (lookAndFeelClass != null) {
+                UIManager.setLookAndFeel(lookAndFeelClass);
+            }
 
             // UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
             // UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -61,11 +81,14 @@ public class AppMainPanel extends JFrame {
         } catch (Exception ex) {
 
         }
-
     }
 
 
-    protected void init() {
+    protected void init(String lookAndFeelClass) {
+
+        if (lookAndFeelClass != null) {
+            AppMainPanel.lookAndFeelClass = lookAndFeelClass;
+        }
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -135,7 +158,7 @@ public class AppMainPanel extends JFrame {
 
         this.mainPanel.revalidate();
         this.mainPanel.repaint();
-        SwingUtilities.updateComponentTreeUI(AppMainPanel.getInstance());
+        SwingUtilities.updateComponentTreeUI(AppMainPanel.getInstance(null));
     }
 
 
