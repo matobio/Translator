@@ -255,7 +255,9 @@ public class TranslationsPanel extends JPanel {
         int rows = 2;
 
         this.fieldSpanish = new JTextArea(rows, columns);
+        this.fieldSpanish.setLineWrap(true);
         this.fieldEnglish = new JTextArea(rows, columns);
+        this.fieldEnglish.setLineWrap(true);
 
         List<JTextArea> jTextAreaList = Arrays.asList(this.fieldGallego, this.fieldCatalan, this.fieldPortuguese, this.fieldChinese, this.fieldFrances, this.fieldGerman);
         for (JTextArea jTextArea : jTextAreaList) {
@@ -263,6 +265,7 @@ public class TranslationsPanel extends JPanel {
             jTextArea.setColumns(columns);
             jTextArea.setEditable(false);
             jTextArea.setBackground(Color.LIGHT_GRAY);
+            jTextArea.setLineWrap(true);
         }
 
         // Button translate

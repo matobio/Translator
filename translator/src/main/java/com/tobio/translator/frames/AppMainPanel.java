@@ -67,14 +67,9 @@ public class AppMainPanel extends JFrame {
 
             if (lookAndFeelClass != null) {
                 UIManager.setLookAndFeel(lookAndFeelClass);
+            } else {
+                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
             }
-
-            // UIManager.setLookAndFeel("ch.randelshofer.quaqua.QuaquaLookAndFeel");
-            // UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            // UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
-            // UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
-            // UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
-            // UIManager.setLookAndFeel("com.jtattoo.plaf.graphite.GraphiteLookAndFeel");
 
             SwingUtilities.updateComponentTreeUI(this);
 
