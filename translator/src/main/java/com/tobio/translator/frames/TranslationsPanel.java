@@ -132,12 +132,12 @@ public class TranslationsPanel extends JPanel {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        this.translationsPanelsList.add(new PanelTranslationRow(this.labelGallego, this.fieldGallego, 0));
         this.translationsPanelsList.add(new PanelTranslationRow(this.labelCatalan, this.fieldCatalan, 1));
-        this.translationsPanelsList.add(new PanelTranslationRow(this.labelPortuguese, this.fieldPortuguese, 2));
-        this.translationsPanelsList.add(new PanelTranslationRow(this.labelChinese, this.fieldChinese, 3));
-        this.translationsPanelsList.add(new PanelTranslationRow(this.labelFrances, this.fieldFrances, 4));
-        this.translationsPanelsList.add(new PanelTranslationRow(this.labelGerman, this.fieldGerman, 5));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelChinese, this.fieldChinese, 2));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelFrances, this.fieldFrances, 3));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelGallego, this.fieldGallego, 4));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelPortuguese, this.fieldPortuguese, 5));
+        this.translationsPanelsList.add(new PanelTranslationRow(this.labelGerman, this.fieldGerman, 6));
 
         this.translationsPanelsList = this.sortPanelTranslations();
         for (PanelTranslationRow jPanel : this.translationsPanelsList) {
@@ -626,7 +626,7 @@ public class TranslationsPanel extends JPanel {
     }
 
 
-    private void normalizeOrder() {
+    protected void normalizeOrder() {
 
         this.translationsPanelsList = this.sortPanelTranslations();
         int size = this.translationsPanelsList.size();
