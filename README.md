@@ -17,7 +17,7 @@ Available tranlation APIs:
 3. Java 1.8 or newer
 
 
-## Instalation commands
+## Installation commands
 
 Download the git project, build and run it.
 <pre>
